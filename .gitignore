@@ -121,7 +121,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-NewsPaper/NewsPaper/.env
+bulletin_board/bulletin_board/.env
 .venv
 env/
 venv/
