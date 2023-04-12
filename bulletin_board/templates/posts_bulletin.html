@@ -1,5 +1,7 @@
 {% extends 'default.html' %}
 
+{% load static %}
+
 {% block title %}
 Список объявлений
 {% endblock %}
@@ -7,10 +9,10 @@
 {% block content %}
     {% for post in bulletin_posts %}
         <div class="card mb-4">
-            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+            <a href="#!"><img class="image_card card-img-top" src="{{ MEDIA_URL}}{{ post.path_to_main_image }}" alt="..." /></a>
             <div class="card-body">
                 <div class="small text-muted">{{ post.create_datetime }}</div>
-                    <h2 class="card-title h4">{{ post.title }}</h2>
+                    <h4 class="card-title h4">{{ post.title }}</h4>
             </div>
         </div>
     {% endfor %}
