@@ -1,0 +1,32 @@
+html, body {
+    height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+.row {
+    justify-content: space-around;
+}
+
+
+@media (min-width: 1100px) {
+    .card {
+        width: 25%;
+        height: 270px;
+        /* max-height: 250px; */
+    }
+}
+
+.text-center {
+    text-align: left !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}

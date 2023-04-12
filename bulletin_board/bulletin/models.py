@@ -18,7 +18,7 @@ class Posts(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.title} | {self.create_datetime} | {self.author.user.username} | {self.category}'
+        return f'{self.title} | {self.create_datetime} | {self.author.username} | {self.category}'
 
 
 class Reply(models.Model):
