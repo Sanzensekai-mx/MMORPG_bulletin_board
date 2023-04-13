@@ -18,3 +18,9 @@ class ListPosts(ListView):
         # print(self.queryset.get(pk='3').load_files.all())
         # print(Image.objects.get(pk='2'))
         return context
+
+
+class DetailPost(DetailView):
+    model = Post
+    template_name = 'bulletin_detail.html'
+    context_object_name = 'bulletin_new'

@@ -37,8 +37,8 @@ class Post(models.Model):
 
     def path_to_main_image(self):
         # return 'Эээй'
-        print(self.load_files.all())
-        print(self.load_files.all().filter(is_main_images=True))
+        # print(self.load_files.all())
+        # print(self.load_files.all().filter(is_main_images=True))
         return self.load_files.all().filter(is_main_images=True)[0].file
         # return self.load_files.get(is_main_images=True).file
 
