@@ -9,7 +9,10 @@
 {% block content %}
     {% for post in bulletin_posts %}
         <div class="card mb-4">
-            <a href="{% url 'bulletin_detail' post.id %}"><img class="image_card card-img-top" src="{{ MEDIA_URL}}{{ post.path_to_main_image }}" alt="..." /></a>
+            <div>
+                <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />
+<!--                <a href="{% url 'bulletin_detail' post.id %}"></a>-->
+            </div>
             <div class="card-body">
                 <div class="small text-muted">{{ post.create_datetime }}</div>
                     <a href="{% url 'bulletin_detail' post.id %}"><h4 class="card-title h4">{{ post.title }}</h4></a>
