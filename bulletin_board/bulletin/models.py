@@ -1,3 +1,5 @@
+import hashlib
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -29,11 +31,12 @@ def main_image_post_dir_path(instance, filename):
 
 class Image(models.Model):
     post_rel = models.ForeignKey('Post', on_delete=models.CASCADE)
-    file = models.ImageField(upload_to=post_dir_path)
+    upload_image = models.ImageField(upload_to=post_dir_path)
+
     # is_main_images = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.file.name} | ID: {self.post_rel.id} | {self.post_rel.title}'
+        return f'{self.upload_image.name} | ID: {self.post_rel.id} | {self.post_rel.title}'
 
     # def save(self, **kwargs):
     #     if len(Image.objects.filter(post_rel=self.post_rel, is_main_images=True)) > 1:
@@ -44,8 +47,8 @@ class Image(models.Model):
     #     # print(self.instance.file)
     #     print(self.file)
     #     # сохранение изображение нужного размера для карточки
-        # if self.is_main_images:
-        #     print(self.instance.file)
+    # if self.is_main_images:
+    #     print(self.instance.file)
 
 
 # Create your models here.
@@ -55,7 +58,7 @@ class Post(models.Model):
     content = models.TextField()
     create_datetime = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    main_image = models.ImageField(upload_to=main_image_post_dir_path)  # фиксированный размер должен быть
+    main_image = models.ImageField(upload_to=main_image_post_dir_path, blank=True)  # фиксированный размер должен быть
     load_files = models.ManyToManyField(to=Image, blank=True)  # все изображения, загружаемые пользователем
 
     def __str__(self):
