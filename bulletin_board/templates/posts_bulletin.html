@@ -1,6 +1,7 @@
 {% extends 'default.html' %}
 
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
 Список объявлений
@@ -12,7 +13,8 @@
             <div class="card mb-4">
                 <div class="card-img-wrapper">
                     <a href="{% url 'bulletin_detail' post.id %}">
-                    <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />
+<!--                    <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />-->
+                        <img class="image_card card-img-top" src="{% thumbnail post.main_image 'default' %}" alt="..." />
                     </a>
                 </div>
                 <div class="card-body">

@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bulletin',
+    'easy_thumbnails',
+    'django_cleanup.apps.CleanupConfig',  # Очистка ненужных файлов полей FileField, ImageField
+    #
 ]
 
 MIDDLEWARE = [
@@ -131,3 +134,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+
+# easy-thumbnails
+
+THUMBNAIL_ALIASES = {
+    'bulletin.Post.main_image': {
+        'default': {
+            'size': (204, 204),
+            'crop': 'smart',
+        }
+    }
+}
+
+THUMBNAIL_DEFAULT_OPTIONS = {'quality': 90, 'subsampling': 1,}

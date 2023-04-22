@@ -11,8 +11,7 @@ class FileInline(admin.TabularInline):
 
 class PostAdmin(admin.ModelAdmin):
     inlines = [FileInline]
-
-    # exclude = ['main_image', 'load_files']
+    exclude = ['main_image', 'load_files']
 
     def save_related(self, request, form, formsets, change):
         # print(formsets[0].cleaned_data)

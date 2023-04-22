@@ -31,18 +31,19 @@ def main_image_post_dir_path(instance, filename):
     return f'post_{instance.id}/main_{filename}'
 
 
-def make_thumbnail(main_image):
-    image = PILImage.open(main_image)
-    image.thumbnail((204, 204))
-    thumb_io = BytesIO()
-    image.save(thumb_io, image.format, quality=95)
-    thumbnail = InMemoryUploadedFile(thumb_io, None, f'{main_image.name}.jpeg', 'image/jpeg', thumb_io.tell(), None)
-    return thumbnail
+# def make_thumbnail(main_image):
+#     print(f'thumbnails {main_image.name}')
+#     image = PILImage.open(main_image)
+#     image.thumbnail((204, 204))
+#     thumb_io = BytesIO()
+#     image.save(thumb_io, image.format, quality=95)
+#     thumbnail = InMemoryUploadedFile(thumb_io, None, f'{main_image.name}.jpeg', 'image/jpeg', thumb_io.tell(), None)
+#     return thumbnail
 
 
 class Image(models.Model):
     post_rel = models.ForeignKey('Post', on_delete=models.CASCADE)
-    upload_image = models.ImageField(upload_to=post_dir_path)
+    upload_image = models.ImageField(upload_to=post_dir_path, blank=True)
 
     # is_main_images = models.BooleanField(default=False)
 
@@ -73,10 +74,13 @@ class Post(models.Model):
     load_files = models.ManyToManyField(to=Image, blank=True)  # все изображения, загружаемые пользователем
 
     def save(self, *args, **kwargs):
-
-        if self.main_image:
-            print(1)
-            self.main_image = make_thumbnail(self.main_image)
+        print(self.main_image.name)
+        # print(self.request.FILES)
+        print(args)
+        print(kwargs)
+    #     # is_main_image = True if 'main' == self.main_image.name.split()[0] else False
+    #     if self.main_image:
+    #         self.main_image = make_thumbnail(self.main_image)
         # if not self.make_main_img_thumbnail():
         #     pass
         # print(1)
