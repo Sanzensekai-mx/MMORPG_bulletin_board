@@ -7,9 +7,12 @@
 {% block content %}
 <h2>Добавить новое объявление</h2>
 <hr>
-<form method="POST">
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'post_upload' %}">
     {% csrf_token %}
     {{ form.as_p }}
+    <a href="#" id="add-image">Добавить изображение</a>
+    <div id="image-fields"></div>
     <input type="submit" value="Добавить">
 </form>
 {% endblock %}

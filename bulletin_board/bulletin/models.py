@@ -74,7 +74,7 @@ class Post(models.Model):
     load_files = models.ManyToManyField(to=Image, blank=True)  # все изображения, загружаемые пользователем
 
     def save(self, *args, **kwargs):
-        print(self.main_image.name)
+        # print(self.main_image)
         # print(self.request.FILES)
         print(args)
         print(kwargs)
@@ -92,6 +92,9 @@ class Post(models.Model):
         # image.save(file + ".thumbnail", "JPEG")
 
     #     image = Image.open(self.main_image)
+
+    def get_absolute_url(self):
+        return f'/bulletin/{self.id}'
 
     def __str__(self):
         return f'{self.title} | {self.create_datetime} | {self.author.username} | {self.category}'

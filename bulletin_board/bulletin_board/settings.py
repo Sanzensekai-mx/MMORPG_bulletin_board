@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'rest_framework', # Django Rest Framework
     'django_cleanup.apps.CleanupConfig',  # Очистка ненужных файлов полей FileField, ImageField
 ]
 

@@ -4,9 +4,14 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Post, Image
 from .forms import PostForm
+from .serializers import PostSerializer, ImageSerializer
 
 
 class ListPosts(ListView):
@@ -36,5 +41,25 @@ class AddPost(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user = User.objects.get(pk=self.request.user.id)
-        form.instance.user = user
+        form.instance.author = user
+        # form.save()
+        # main_image = form.instance.load_files.all().first()
+        # form.instance.main_image = main_image.upload_image
         return super().form_valid(form)
+
+
+class PostUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        print(1)
+        # images = request.FILES.getlist('image')
+        images = request.FILES # !!!!!!!!
+        image_serializer = ImageSerializer(data={'image': images}, many=True)
+        if image_serializer.is_valid():
+            print(image_serializer)
+        print(request.POST)
+        print(request.FILES)  # !!!
+        # {'images-0': [<InMemoryUploadedFile: 36f48fee328e065a4e89c4272f16e767--batman-christian-bale-christian-grey.jpg (image/jpeg)>]}>
+        # print(request.FILES.getlist('image'))
+        return Response()
