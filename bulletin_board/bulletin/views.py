@@ -1,9 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from .models import Post, Image
+from .forms import PostForm
 
 
 class ListPosts(ListView):
@@ -24,3 +27,14 @@ class DetailPost(DetailView):
     model = Post
     template_name = 'bulletin_detail.html'
     context_object_name = 'bulletin_new'
+
+
+class AddPost(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = 'bulletin_add_post.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        user = User.objects.get(pk=self.request.user.id)
+        form.instance.user = user
+        return super().form_valid(form)
