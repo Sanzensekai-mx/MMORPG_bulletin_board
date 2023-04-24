@@ -41,9 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bulletin',
     'easy_thumbnails',
+    'django.contrib.sites',  # Надо также для all-auth
+    # ! all-auth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'django_cleanup.apps.CleanupConfig',  # Очистка ненужных файлов полей FileField, ImageField
-    #
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,3 +153,35 @@ THUMBNAIL_ALIASES = {
 }
 
 THUMBNAIL_DEFAULT_OPTIONS = {'quality': 90, 'subsampling': 1,}
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_URL = '/accounts/login/'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+LOGIN_REDIRECT_URL = '/all'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/all'
+
+# email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
