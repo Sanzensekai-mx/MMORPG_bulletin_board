@@ -1,5 +1,7 @@
 html, body {
     height: 100%;
+    background-image: url('/static/assets/wooden-floor-background.jpg');
+    background-size: cover;
 }
 
 .wrapper {
@@ -10,12 +12,13 @@ html, body {
 
 .content {
     flex: 1 0 auto;
+    /* background-image: url('/static/assets/wooden-floor-background.jpg');
+    background-size: cover; */
 }
 
 
 @media (min-width: 800px) {
     .card {
-        width: 20%;
         /* height: 270px; */
         /* max-height: 250px; */
     }
@@ -29,10 +32,19 @@ html, body {
 
 .card {
     border: 0px !important;
+    background-color: rgba(66, 66, 66, 0.5) !important;
+    padding-top: 0.5rem;
+    margin-right: 5px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .new-header {
     padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-bottom: 0px;
+    background-color: rgba(60, 42, 41, 0.8) !important;
+    border-bottom: none !important;
 }
 
 .card-body {
@@ -60,4 +72,48 @@ h4 {
     max-width: 100%;
     /* animation: fade 5s linear infinite; */
     /* animation-delay: 2.5s; */
+}
+
+.bg-dark {
+    background-color: rgba(60, 42, 41, 0.8) !important;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-goblin {
+    width: 120px;
+    height: auto;
+}
+
+.web-site-name, .web-site-name:hover, .web-site-name:active {
+    text-decoration: none;
+    color: #fff;
+}
+
+.card-body > a, a:hover, a:active {
+    text-decoration: none;
+    color: #fff;
+}
+
+.text-muted {
+    color: #fff !important;
+}
+
+.card-img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 204px;
+    height: 204px;
+}
+
+.card-img {
+    width: none !important;
+}
+
+.image_card {
+    width: none !important;
 }

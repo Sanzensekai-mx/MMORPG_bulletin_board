@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bulletin',
+    'easy_thumbnails',
     'django.contrib.sites',  # Надо также для all-auth
     # ! all-auth apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # !
+    'django_cleanup.apps.CleanupConfig',  # Очистка ненужных файлов полей FileField, ImageField
 ]
 
 SITE_ID = 1
@@ -140,7 +141,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-# all-auth main settings
+# easy-thumbnails
+
+THUMBNAIL_ALIASES = {
+    'bulletin.Post.main_image': {
+        'default': {
+            'size': (204, 204),
+            'crop': 'smart',
+        }
+    }
+}
+
+THUMBNAIL_DEFAULT_OPTIONS = {'quality': 90, 'subsampling': 1,}
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`

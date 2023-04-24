@@ -1,6 +1,7 @@
 {% extends 'default.html' %}
 
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
 Список объявлений
@@ -8,15 +9,18 @@
 
 {% block content %}
     {% for post in bulletin_posts %}
-        <div class="card mb-4">
-            <div>
-                <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />
-<!--                <a href="{% url 'bulletin_detail' post.id %}"></a>-->
-            </div>
-            <div class="card-body">
-                <div class="small text-muted">{{ post.create_datetime }}</div>
+
+            <div class="card mb-4">
+                <div class="card-img-wrapper">
+                    <a href="{% url 'bulletin_detail' post.id %}">
+<!--                    <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />-->
+                        <img class="image_card card-img-top" src="{% thumbnail post.main_image 'default' %}" alt="..." />
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="small text-muted">{{ post.create_datetime }}</div>
                     <a href="{% url 'bulletin_detail' post.id %}"><h4 class="card-title h4">{{ post.title }}</h4></a>
+                </div>
             </div>
-        </div>
     {% endfor %}
 {% endblock %}
