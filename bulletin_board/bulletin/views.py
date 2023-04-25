@@ -11,6 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, Image
 from .forms import PostForm
+
+
 # from .serializers import PostSerializer, ImageSerializer
 
 
@@ -61,6 +63,52 @@ class AddPost(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
+
+class UpdatePost(UpdateView):
+    model = Post
+    template_name = 'bulletin_edit_post.html'
+    form_class = PostForm
+
+    def get_object(self, queryset=None):
+        id = self.kwargs.get('pk')
+        return Post.objects.get(pk=id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(pk=self.kwargs.get('pk'))
+        # print(post.load_files.all())
+        context['images'] = [p.upload_image for p in post.load_files.all()]
+        return context
+
+    def form_valid(self, form):
+        post = form.instance
+        actual_post_load_files = post.load_files.all()  # Image objects
+        image_list = list(actual_post_load_files)
+        # print(image_list)
+        files = self.request.FILES  # files from request
+        print(files)
+        to_add_images = files.getlist('images')
+
+        if to_add_images:
+            for image in to_add_images:
+                new_image = Image.objects.create(post_rel=form.instance, upload_image=image)
+                new_image.save()
+                image_list.append(new_image)
+
+        for k, v in files.items():
+            if k == 'images':
+                continue
+
+            idx = int(k.split('-')[1])
+            image_obj = image_list[idx]
+            image_obj.upload_image = v
+            image_obj.save()
+            image_list[idx] = image_obj
+
+        post.load_files.clear()
+        post.load_files.set(image_list)
+        print(post.load_files.all())
+        return super().form_valid(form)
 
 # class PostUploadView(APIView):
 #     parser_classes = (MultiPartParser, FormParser)

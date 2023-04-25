@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+
+{% block title %}
+    Добавить объявление
+{% endblock %}
+
+{% block content %}
+<h2>Редактировать объявление</h2>
+<hr>
+
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% for image in images %}
+        <div class="image-wrapper">
+            <img src="{{ MEDIA_URL }}{{ image }}" alt="...">
+            <input type="file" name="image-{{ forloop.counter0 }}" class="form-control-file">
+        </div>
+    {% endfor %}
+    <a href="#" id="add-image">Добавить изображение</a>
+    <div id="image-fields"></div>
+    <input type="submit" value="Сохранить изменения">
+</form>
+{% endblock %}
