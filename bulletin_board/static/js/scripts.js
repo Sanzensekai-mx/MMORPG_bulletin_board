@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Создаем новый элемент поля ввода изображения
         var newField = document.createElement('div');
         newField.className = 'form-group';
-        newField.innerHTML = '<label for="id_images-' + fieldCount + '">Image ' + fieldCount + '</label><input type="file" name="images-' + fieldCount + '" class="form-control-file">';
-
+//        newField.innerHTML = '<label for="id_image-' + fieldCount + '">Image ' + fieldCount + '</label><input type="file" name="image-' + fieldCount + '" class="form-control-file">';
+        newField.innerHTML = '<label for="id_image-' + fieldCount + '">Image ' + fieldCount + '</label><input type="file" name="images" class="form-control-file">';
         // Добавляем новое поле ввода в контейнер
         imageFields.appendChild(newField);
 

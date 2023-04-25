@@ -8,7 +8,8 @@
 <h2>Добавить новое объявление</h2>
 <hr>
 
-<form method="POST" enctype="multipart/form-data" action="{% url 'post_upload' %}">
+
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <a href="#" id="add-image">Добавить изображение</a>
