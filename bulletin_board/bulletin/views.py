@@ -87,16 +87,13 @@ class UpdatePost(UpdateView):
         # print(image_list)
         files = self.request.FILES  # files from request
         print(files)
-        to_add_images = files.getlist('images')
-
-        if to_add_images:
-            for image in to_add_images:
-                new_image = Image.objects.create(post_rel=form.instance, upload_image=image)
-                new_image.save()
-                image_list.append(new_image)
 
         for k, v in files.items():
             if k == 'images':
+                for image in files.getlist('images'):
+                    new_image = Image.objects.create(post_rel=form.instance, upload_image=image)
+                    new_image.save()
+                    image_list.append(new_image)
                 continue
 
             idx = int(k.split('-')[1])
