@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Post, Image
+from .models import Post, Media
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
+        model = Media
         fields = ('id', 'image')
 
 

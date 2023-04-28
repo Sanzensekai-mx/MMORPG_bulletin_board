@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Image
+from .models import Post, Media
 
 
 class PostForm(forms.ModelForm):
@@ -9,11 +9,11 @@ class PostForm(forms.ModelForm):
 
 
 class ImageForm(forms.ModelForm):
-    image = forms.ImageField(
+    image = forms.FileField(
         label="Изображение",
         widget=forms.ClearableFileInput(attrs={"multiple": True})
     )
 
     class Meta:
-        model = Image
-        fields = ['upload_image',]
+        model = Media
+        fields = ['upload_file',]

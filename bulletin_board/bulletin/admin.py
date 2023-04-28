@@ -5,7 +5,7 @@ from django.db.models.fields.files import ImageFieldFile
 
 
 class FileInline(admin.TabularInline):
-    model = Image
+    model = Media
     extra = 1
 
 
@@ -24,7 +24,7 @@ class PostAdmin(admin.ModelAdmin):
         if image_formset.cleaned_data:
             images_data = image_formset.cleaned_data
             # print(images_data)
-            post.main_image = images_data[0]['upload_image']
+            post.main_image = images_data[0]['upload_file']
             post.save()
 
             images = []
@@ -32,11 +32,11 @@ class PostAdmin(admin.ModelAdmin):
 
                 if image_data:
                     # print(type(image_data.get('upload_image')))
-                    if type(image_data.get('upload_image')) is ImageFieldFile:
-                        image = Image.objects.filter(upload_image=image_data.get('upload_image').name).first()
+                    if type(image_data.get('upload_file')) is ImageFieldFile:
+                        image = Media.objects.filter(upload_image=image_data.get('upload_file').name).first()
                     else:
-                        image = Image.objects.filter(
-                            upload_image=f"post_{post.id}/{image_data.get('upload_image').name}").first()
+                        image = Media.objects.filter(
+                            upload_file=f"post_{post.id}/{image_data.get('upload_file').name}").first()
                     images.append(image)
 
             post.load_files.clear()
@@ -47,4 +47,4 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(Reply)
 admin.site.register(Category)
-admin.site.register(Image)
+admin.site.register(Media)

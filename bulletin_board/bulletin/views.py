@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
 
-from .models import Post, Image
+from .models import Post, Media
 from .forms import PostForm
 
 
@@ -53,7 +53,7 @@ class AddPost(LoginRequiredMixin, CreateView):
 
         images_obj = []
         for file in files:
-            image_obj = Image.objects.create(post_rel=post, upload_image=file)
+            image_obj = Media.objects.create(post_rel=post, upload_file=file)
             image_obj.save()
             images_obj.append(image_obj)
 
@@ -77,7 +77,7 @@ class UpdatePost(UpdateView):
         context = super().get_context_data(**kwargs)
         post = Post.objects.get(pk=self.kwargs.get('pk'))
         # print(post.load_files.all())
-        context['images'] = [p.upload_image for p in post.load_files.all()]
+        context['images'] = [p.upload_file for p in post.load_files.all()]
         return context
 
     def form_valid(self, form):
@@ -91,14 +91,14 @@ class UpdatePost(UpdateView):
         for k, v in files.items():
             if k == 'images':
                 for image in files.getlist('images'):
-                    new_image = Image.objects.create(post_rel=form.instance, upload_image=image)
+                    new_image = Media.objects.create(post_rel=form.instance, upload_image=image)
                     new_image.save()
                     image_list.append(new_image)
                 continue
 
             idx = int(k.split('-')[1])
             image_obj = image_list[idx]
-            image_obj.upload_image = v
+            image_obj.upload_file = v
             image_obj.save()
             image_list[idx] = image_obj
 
