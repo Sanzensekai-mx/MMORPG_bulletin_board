@@ -1,4 +1,8 @@
 from django import forms
+from django.core.validators import FileExtensionValidator
+
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
+
 from .models import Post, Media
 
 
@@ -8,12 +12,16 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'content', 'category']
 
 
-class ImageForm(forms.ModelForm):
-    image = forms.FileField(
-        label="Изображение",
-        widget=forms.ClearableFileInput(attrs={"multiple": True})
-    )
+# MediaFormset = inlineformset_factory(Post, Media, extra=1)
 
-    class Meta:
-        model = Media
-        fields = ['upload_file',]
+
+# class MediaForm(forms.ModelForm):
+#     class Meta:
+#         model = Media
+#         fields = ['upload_file', ]
+
+class MediaForm(forms.Form):
+    upload_files = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'multiple': True}),
+        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])]
+    )

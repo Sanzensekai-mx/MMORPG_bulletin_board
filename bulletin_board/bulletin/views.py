@@ -4,13 +4,15 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.db import transaction
+
 # from rest_framework.decorators import api_view, parser_classes
 # from rest_framework.parsers import MultiPartParser, FormParser
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
 
 from .models import Post, Media
-from .forms import PostForm
+from .forms import PostForm, MediaForm
 
 
 # from .serializers import PostSerializer, ImageSerializer
@@ -41,26 +43,33 @@ class AddPost(LoginRequiredMixin, CreateView):
     template_name = 'bulletin_add_post.html'
     form_class = PostForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.FILES)
+        if self.request.POST:
+            context['media_form'] = MediaForm(self.request.POST, self.request.FILES)
+        else:
+            context['media_form'] = MediaForm()
+
+        return context
+
     def form_valid(self, form):
         user = User.objects.get(pk=self.request.user.id)
         form.instance.author = user
-        post = form.save(commit=False)
-        post.save()
+        context = self.get_context_data()
+        media_form = context['media_form']
+        files = self.request.FILES.getlist('upload_files')
+        print(media_form.is_valid())
 
-        files = self.request.FILES.getlist('images')
-        print(self.request.FILES)
-        print(files)
+        if form.is_valid() and media_form.is_valid():
+            post = form.save()
+            for media in files:
+                media_file = Media.objects.create(post_rel=post)
+                media_file.upload_file = media
+                media_file.save()
+                post.load_files.add(media_file)
 
-        images_obj = []
-        for file in files:
-            image_obj = Media.objects.create(post_rel=post, upload_file=file)
-            image_obj.save()
-            images_obj.append(image_obj)
-
-        post.main_image = files[0]
-        post.load_files.set(images_obj)
-        post.save()
-
+            post.main_image = files[0]
         return super().form_valid(form)
 
 
