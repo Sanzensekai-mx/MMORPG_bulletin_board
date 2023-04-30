@@ -134,3 +134,10 @@ class UpdatePost(UpdateView):
         post.load_files.set(image_list)
         print(post.load_files.all())
         return super().form_valid(form)
+
+
+class DeletePost(DeleteView):
+    model = Post
+    template_name = 'bulletin_delete.html'
+    context_object_name = 'post_to_del'
+    success_url = '/'
