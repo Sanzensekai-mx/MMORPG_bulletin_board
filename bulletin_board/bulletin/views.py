@@ -87,20 +87,39 @@ class UpdatePost(UpdateView):
         post = Post.objects.get(pk=self.kwargs.get('pk'))
         # print(post.load_files.all())
         context['images'] = [p.upload_file for p in post.load_files.all()]
+
+        # if self.request.POST:
+        #     context['media_form'] = MediaForm(self.request.POST, self.request.FILES)
+        # else:
+        #     context['media_form'] = MediaForm()
+
         return context
 
     def form_valid(self, form):
         post = form.instance
         actual_post_load_files = post.load_files.all()  # Image objects
         image_list = list(actual_post_load_files)
-        # print(image_list)
-        files = self.request.FILES  # files from request
-        print(files)
+
+        files = self.request.FILES
+
+        # context = self.get_context_data()
+        # media_form = context['media_form']
+        #
+        # files = self.request.FILES.getlist('upload_files')
+
+        # if form.is_valid() and media_form.is_valid():
+        #     post = form.save()
+        #     for media in files:
+        #         media_file = Media.objects.create(post_rel=post)
+        #         media_file.upload_file = media
+        #         media_file.save()
+        #         # post.load_files.add(media_file)
+        #         image_list.append(media_file)
 
         for k, v in files.items():
             if k == 'images':
                 for image in files.getlist('images'):
-                    new_image = Media.objects.create(post_rel=form.instance, upload_image=image)
+                    new_image = Media.objects.create(post_rel=form.instance, upload_file=image)
                     new_image.save()
                     image_list.append(new_image)
                 continue
@@ -115,23 +134,3 @@ class UpdatePost(UpdateView):
         post.load_files.set(image_list)
         print(post.load_files.all())
         return super().form_valid(form)
-
-# class PostUploadView(APIView):
-#     parser_classes = (MultiPartParser, FormParser)
-#
-#     def post(self, request, *args, **kwargs):
-#         # images = request.FILES.getlist('image')
-#         print(request.FILES)  # !!!
-#
-#         images = request.FILES.getlist('images')  # !!!!!!!!
-#         print(images)
-#         image_serializer = ImageSerializer(data={'image': images}, many=True)
-#         if image_serializer.is_valid():
-#             print(1)
-#             print(image_serializer)
-#         print(request.POST)
-#         print(Post.objects.filter(title=request.POST['title'][0]))
-#
-#         # {'images-0': [<InMemoryUploadedFile: 36f48fee328e065a4e89c4272f16e767--batman-christian-bale-christian-grey.jpg (image/jpeg)>]}>
-#         # print(request.FILES.getlist('image'))
-#         return Response()
