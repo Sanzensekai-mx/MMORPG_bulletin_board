@@ -37,6 +37,15 @@ class DetailPost(DetailView):
     template_name = 'bulletin_detail.html'
     context_object_name = 'bulletin_new'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(kwargs)
+        post = Post.objects.get(pk=kwargs['object'].id)
+        all_media = post.load_files.all()
+        context['first_media'] = all_media.first
+        context['rest_of_media'] = all_media[1:]
+        return context
+
 
 class AddPost(LoginRequiredMixin, CreateView):
     model = Post
