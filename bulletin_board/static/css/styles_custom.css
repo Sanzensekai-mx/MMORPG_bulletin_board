@@ -118,3 +118,8 @@ h4 {
 .image_card {
     width: none !important;
 }
+
+.media-file {
+    width: 204px;
+    height: auto;
+}

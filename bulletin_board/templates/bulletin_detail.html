@@ -11,7 +11,7 @@
         <h2>{{ bulletin_new.title }}</h2>
         <p>{{ bulletin_new.create_datetime }}</p>
         <div class="image-wrapper">
-
+<!--            {{ first_media.upload_file.name }}-->
             <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="..." />
             {% for media in rest_of_media %}
                 <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="..." />

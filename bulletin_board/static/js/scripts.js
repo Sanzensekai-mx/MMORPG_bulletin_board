@@ -31,3 +31,30 @@ document.addEventListener('DOMContentLoaded', function() {
         fieldCount++;
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    let deleteButtons = document.getElementsByClassName('delete-image')
+    console.log(deleteButtons)
+    let deletedArray = new Array();
+    let imagesElements = document.getElementsByClassName('image-div')
+
+    function updateDeletedInput() {
+        const deletedImagesInput = document.getElementById('deleted-images-input');
+        deletedImagesInput.value = JSON.stringify(deletedArray);
+    }
+
+    for (let i = 0; i < imagesElements.length; i++) {
+        const image = imagesElements[i]
+        const button = deleteButtons[i]
+        button.addEventListener('click', () => {
+            image.remove();
+            deletedArray.push(i)
+            console.log(i)
+            console.log(deletedArray)
+            updateDeletedInput();
+        })
+    }
+
+    
+})
+

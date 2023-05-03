@@ -1,4 +1,5 @@
-from django.shortcuts import render
+import json
+from django.shortcuts import render, redirect
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
@@ -39,11 +40,11 @@ class DetailPost(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(kwargs)
         post = Post.objects.get(pk=kwargs['object'].id)
         all_media = post.load_files.all()
-        context['first_media'] = all_media.first
-        context['rest_of_media'] = all_media[1:]
+        if all_media:
+            context['first_media'] = all_media[0]
+            context['rest_of_media'] = all_media[1:]
         return context
 
 
@@ -52,26 +53,23 @@ class AddPost(LoginRequiredMixin, CreateView):
     template_name = 'bulletin_add_post.html'
     form_class = PostForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        print(self.request.FILES)
-        if self.request.POST:
-            context['media_form'] = MediaForm(self.request.POST, self.request.FILES)
-        else:
-            context['media_form'] = MediaForm()
+    def get(self, request, *args, **kwargs):
+        form = PostForm()
+        media_form = MediaForm()
+        return render(request, self.template_name, {'form': form, 'media_form': media_form})
 
-        return context
+    def post(self, request, *args, **kwargs):
+        # self.object = self.get_object()
+        user = User.objects.get(pk=request.user.id)
+        # context = self.get_context_data()
+        post_form = PostForm(request.POST)
+        media_form = MediaForm(request.POST, request.FILES)
+        files = request.FILES.getlist('upload_files')
 
-    def form_valid(self, form):
-        user = User.objects.get(pk=self.request.user.id)
-        form.instance.author = user
-        context = self.get_context_data()
-        media_form = context['media_form']
-        files = self.request.FILES.getlist('upload_files')
-        print(media_form.is_valid())
+        post_form.instance.author = user
 
-        if form.is_valid() and media_form.is_valid():
-            post = form.save()
+        if post_form.is_valid() and media_form.is_valid():
+            post = post_form.save()
             for media in files:
                 media_file = Media.objects.create(post_rel=post)
                 media_file.upload_file = media
@@ -79,7 +77,9 @@ class AddPost(LoginRequiredMixin, CreateView):
                 post.load_files.add(media_file)
 
             post.main_image = files[0]
-        return super().form_valid(form)
+            return self.form_valid(post_form)
+        else:
+            return render(request, self.template_name, {'form': post_form, 'media_form': media_form})
 
 
 class UpdatePost(UpdateView):
@@ -97,52 +97,26 @@ class UpdatePost(UpdateView):
         # print(post.load_files.all())
         context['images'] = [p.upload_file for p in post.load_files.all()]
 
-        # if self.request.POST:
-        #     context['media_form'] = MediaForm(self.request.POST, self.request.FILES)
-        # else:
-        #     context['media_form'] = MediaForm()
-
         return context
 
-    def form_valid(self, form):
-        post = form.instance
-        actual_post_load_files = post.load_files.all()  # Image objects
-        image_list = list(actual_post_load_files)
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(pk=self.kwargs.get('pk'))
+        post_media = post.load_files.all()
+        deleted_images = request.POST.get('deleted_images', '[]')
+        deleted_images = json.loads(deleted_images)
 
-        files = self.request.FILES
+        files = request.FILES.getlist('images')
+        for media_idx in deleted_images:
+            media = post_media[media_idx]
+            media.delete()
+            # print(post_media[media_idx])
 
-        # context = self.get_context_data()
-        # media_form = context['media_form']
-        #
-        # files = self.request.FILES.getlist('upload_files')
+        for media in files:
+            new_media = Media.objects.create(post_rel=post, upload_file=media)
+            new_media.save()
+            post.load_files.add(new_media)
 
-        # if form.is_valid() and media_form.is_valid():
-        #     post = form.save()
-        #     for media in files:
-        #         media_file = Media.objects.create(post_rel=post)
-        #         media_file.upload_file = media
-        #         media_file.save()
-        #         # post.load_files.add(media_file)
-        #         image_list.append(media_file)
-
-        for k, v in files.items():
-            if k == 'images':
-                for image in files.getlist('images'):
-                    new_image = Media.objects.create(post_rel=form.instance, upload_file=image)
-                    new_image.save()
-                    image_list.append(new_image)
-                continue
-
-            idx = int(k.split('-')[1])
-            image_obj = image_list[idx]
-            image_obj.upload_file = v
-            image_obj.save()
-            image_list[idx] = image_obj
-
-        post.load_files.clear()
-        post.load_files.set(image_list)
-        print(post.load_files.all())
-        return super().form_valid(form)
+        return super().post(request, *args, **kwargs)
 
 
 class DeletePost(DeleteView):

@@ -12,12 +12,15 @@
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    {% for image in images %}
-        <div class="image-wrapper">
-            <img src="{{ MEDIA_URL }}{{ image }}" alt="...">
-            <input type="file" name="image-{{ forloop.counter0 }}" class="form-control-file">
-        </div>
-    {% endfor %}
+    <div class="image-wrapper">
+        {% for image in images %}
+            <div class="image-div">
+                <img class="media-file" src="{{ MEDIA_URL }}{{ image }}" alt="...">
+                <a href="#" class="delete-image">x</a>
+            </div>
+        {% endfor %}
+    </div>
+    <input type="hidden" name="deleted_images" id="deleted-images-input">
     <a href="#" id="add-image">Добавить изображение</a>
     <div id="image-fields"></div>
     <input type="submit" value="Сохранить изменения">
