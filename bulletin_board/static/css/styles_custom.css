@@ -123,3 +123,7 @@ h4 {
     width: 204px;
     height: auto;
 }
+
+#reply-button {
+    text-align: center;
+}

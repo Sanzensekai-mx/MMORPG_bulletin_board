@@ -2,8 +2,11 @@ import json
 from django.shortcuts import render, redirect
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.http import HttpResponseRedirect
 
 from django.db import transaction
 
@@ -13,7 +16,7 @@ from django.db import transaction
 # from rest_framework.views import APIView
 
 from .models import Post, Media
-from .forms import PostForm, MediaForm
+from .forms import PostForm, MediaForm, ReplyTextArea
 
 
 # from .serializers import PostSerializer, ImageSerializer
@@ -37,15 +40,31 @@ class DetailPost(DetailView):
     model = Post
     template_name = 'bulletin_detail.html'
     context_object_name = 'bulletin_new'
+    object = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = Post.objects.get(pk=kwargs['object'].id)
         all_media = post.load_files.all()
+        context['reply_send'] = ReplyTextArea()
         if all_media:
             context['first_media'] = all_media[0]
             context['rest_of_media'] = all_media[1:]
         return context
+
+    def post(self, request, *args, **kwargs):
+        reply_form = ReplyTextArea(request.POST)
+        post = Post.objects.get(pk=kwargs['pk'])
+
+        reply_form.instance.user = request.user
+        reply_form.instance.post = post
+
+        if reply_form.is_valid():
+            reply = reply_form.save()
+            return HttpResponseRedirect(f'{kwargs["pk"]}')
+
+        # else:
+        #     return render(request, self.template_name, context=self.get_context_data())
 
 
 class AddPost(LoginRequiredMixin, CreateView):

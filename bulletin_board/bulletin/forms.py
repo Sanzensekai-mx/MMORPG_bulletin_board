@@ -3,7 +3,7 @@ from django.core.validators import FileExtensionValidator
 
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 
-from .models import Post, Media
+from .models import Post, Media, Reply
 
 
 class PostForm(forms.ModelForm):
@@ -25,3 +25,9 @@ class MediaForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={'multiple': True}),
         validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'mp4'])]
     )
+
+
+class ReplyTextArea(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['text', ]

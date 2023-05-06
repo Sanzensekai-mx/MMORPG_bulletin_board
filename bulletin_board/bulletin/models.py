@@ -107,9 +107,9 @@ class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
-    create_datatime = models.DateTimeField(auto_now_add=True)
-    is_accept = models.BooleanField(default=False)
-    is_rejected = models.BooleanField(default=False)
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    is_accept = models.BooleanField(default=False, blank=True)
+    is_rejected = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
-        return f'{self.user.username} | {self.post.title} | {self.create_datatime}'
+        return f'{self.user.username} | {self.post.title} | {self.create_datetime}'

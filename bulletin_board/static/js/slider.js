@@ -3,11 +3,11 @@ let imgTag = document.getElementsByClassName("image-wrapper")[0].children[0];
 let curSliderPos = 0
 
 let imgList = document.querySelectorAll(".media")
-console.log(imgList)
+// console.log(imgList)
 
 function validPosition(direction, pictList) {
     let imgTag = document.getElementsByClassName("image-wrapper")[0].children[curSliderPos]
-    console.log(imgTag)
+    // console.log(imgTag)
     if (direction === 'forward') {
         curSliderPos++
     } else if (direction === 'back') {
