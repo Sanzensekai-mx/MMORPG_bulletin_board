@@ -6,14 +6,7 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.http import HttpResponseRedirect
-
-from django.db import transaction
-
-# from rest_framework.decorators import api_view, parser_classes
-# from rest_framework.parsers import MultiPartParser, FormParser
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
+from django.urls import reverse
 
 from .models import Post, Media
 from .forms import PostForm, MediaForm, ReplyTextArea
@@ -36,35 +29,42 @@ class ListPosts(ListView):
         return context
 
 
-class DetailPost(DetailView):
+class DetailPost(DetailView, FormMixin):
     model = Post
     template_name = 'bulletin_detail.html'
     context_object_name = 'bulletin_new'
-    object = None
+    form_class = ReplyTextArea
+
+    def get_success_url(self):
+        return reverse('bulletin_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+
         post = Post.objects.get(pk=kwargs['object'].id)
         all_media = post.load_files.all()
         context['reply_send'] = ReplyTextArea()
         if all_media:
             context['first_media'] = all_media[0]
             context['rest_of_media'] = all_media[1:]
+
         return context
 
     def post(self, request, *args, **kwargs):
-        reply_form = ReplyTextArea(request.POST)
-        post = Post.objects.get(pk=kwargs['pk'])
+        self.object = self.get_object()
+        form = self.get_form()
 
-        reply_form.instance.user = request.user
-        reply_form.instance.post = post
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.post = self.object
+            reply.user = request.user
+            reply.save()
 
-        if reply_form.is_valid():
-            reply = reply_form.save()
-            return HttpResponseRedirect(f'{kwargs["pk"]}')
+            return self.form_valid(form)
 
-        # else:
-        #     return render(request, self.template_name, context=self.get_context_data())
+        else:
+            return self.form_invalid(form)
 
 
 class AddPost(LoginRequiredMixin, CreateView):
