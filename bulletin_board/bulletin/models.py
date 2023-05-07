@@ -92,6 +92,7 @@ class Reply(models.Model):
     create_datetime = models.DateTimeField(auto_now_add=True)
     is_accept = models.BooleanField(default=False, blank=True)
     is_rejected = models.BooleanField(default=False, blank=True)
+    viewed = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f'{self.user.username} | {self.post.title} | {self.create_datetime}'

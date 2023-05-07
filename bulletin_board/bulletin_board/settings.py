@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bulletin',
+    # 'bulletin',
     'easy_thumbnails',
+    'bulletin.apps.BulletinConfig',
     'django.contrib.sites',  # Надо также для all-auth
     # ! all-auth apps
     'allauth',
