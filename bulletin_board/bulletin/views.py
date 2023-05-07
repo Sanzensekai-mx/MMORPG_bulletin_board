@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse
 
-from .models import Post, Media
+from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
 
 
@@ -42,7 +42,8 @@ class DetailPost(DetailView, FormMixin):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
 
-        post = Post.objects.get(pk=kwargs['object'].id)
+        # post = Post.objects.get(pk=kwargs['object'].id)
+        post = self.object
         all_media = post.load_files.all()
         context['reply_send'] = ReplyTextArea()
         if all_media:
@@ -54,17 +55,21 @@ class DetailPost(DetailView, FormMixin):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
+        user = request.user
+        is_reply_exist = Reply.objects.filter(user=user, post=self.object).exists()
 
-        if form.is_valid():
+        if form.is_valid() and not is_reply_exist:
             reply = form.save(commit=False)
             reply.post = self.object
-            reply.user = request.user
+            reply.user = user
             reply.save()
 
             return self.form_valid(form)
 
         else:
-            return self.form_invalid(form)
+            return self.render_to_response(self.get_context_data(form=form,
+                                                                 error_message='Вы уже отправили отклик на объявление'))
+            # return self.form_invalid(form)
 
 
 class AddPost(LoginRequiredMixin, CreateView):

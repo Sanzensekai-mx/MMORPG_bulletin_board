@@ -46,6 +46,9 @@
                 <a href="#" id="cancel-reply-button">Отменить</a>
                 <input type="submit" value="Отправить">
             </form>
+            {% if error_message %}
+                <p>{{ error_message }}</p>
+            {% endif %}
         </div>
     </div>
 

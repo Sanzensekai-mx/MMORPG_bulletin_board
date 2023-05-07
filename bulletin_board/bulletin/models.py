@@ -73,34 +73,16 @@ class Post(models.Model):
     main_image = models.ImageField(upload_to=main_image_post_dir_path, blank=True)  # фиксированный размер должен быть
     load_files = models.ManyToManyField(to=Media, blank=True)  # все изображения, загружаемые пользователем
 
-    def save(self, *args, **kwargs):
-        # print(self.main_image)
-        # print(self.request.FILES)
-        print(args)
-        print(kwargs)
-    #     # is_main_image = True if 'main' == self.main_image.name.split()[0] else False
-    #     if self.main_image:
-    #         self.main_image = make_thumbnail(self.main_image)
-        # if not self.make_main_img_thumbnail():
-        #     pass
-        # print(1)
-        # print(self.main_image)
-        super().save(*args, **kwargs)
-        # file = self.main_image.name.split('.')
-        # image = PILImage.open(self.main_image.name, mode='r')
-        # image.thumbnail((204, 204), PILImage.ANTIALIAS)
-        # image.save(file + ".thumbnail", "JPEG")
-
-    #     image = Image.open(self.main_image)
+    # def save(self, *args, **kwargs):
+    #     print(args)
+    #     print(kwargs)
+    #     super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return f'/bulletin/{self.id}'
 
     def __str__(self):
         return f'{self.title} | {self.create_datetime} | {self.author.username} | {self.category}'
-
-    # def path_to_main_image(self):
-    #     return self.load_files.all().filter(is_main_images=True)[0].file
 
 
 class Reply(models.Model):
