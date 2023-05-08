@@ -1,0 +1,22 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Delete Post
+{% endblock %}
+
+{% block content %}
+<h2>Вы действительно хотите удалить объявление?</h2>
+
+<div>
+    <p>{{ post_to_del.author }}</p>
+    <p>{{ post_to_del.title }}</p>
+    <p>{{ post_to_del.create_time }}</p>
+</div>
+
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+</form>
+
+{% endblock %}

@@ -10,21 +10,49 @@
     <div class="col-8">
         <h2>{{ bulletin_new.title }}</h2>
         <p>{{ bulletin_new.create_datetime }}</p>
-        {% for image in bulletin_new.load_files.all %}
-            <div class="image-wrapper">
-                <img src="{{ MEDIA_URL }}{{ image.upload_image }}" alt="..." />
-            </div>
-        {% endfor %}
-
+        <div class="image-wrapper">
+<!--            {{ first_media.upload_file.name }}-->
+            <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="..." />
+            {% for media in rest_of_media %}
+                <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="..." />
+            {% endfor %}
+        </div>
+        <section class="slider-main">
+            <div class="slider-btn slider-btn-back"><a href="#" id="stepBack">&lt;</a></div>
+                <div class="hide-div">
+                    <div class="loader"></div>
+                </div>
+                <div class="image-wrapper"></div>
+                <div class="slider-btn slider-btn-forward"><a href="#" id="stepForward">&gt;</a></div>
+        </section>
+<!--        <section class="dop-slider-btns">-->
+<!--                <div class="dop-slider-btn slider-btn-back dop-slider-btn"><a href="#" id="stepBackDop">&lt;</a></div>-->
+<!--                <div class="dop-slider-btn slider-btn-forward dop-slider-btn"><a href="#" id="stepForwardDop">&gt;</a></div>-->
+<!--        </section>-->
+<!--        <section class="slider-preview"></section>-->
         <div class="sub-content">
             <p>Категория: {{ bulletin_new.category }}</p>
             <p>{{ bulletin_new.content }}</p>
         </div>
     </div>
     <div class="col-4">
-        <a href=""><h2>Откликнуться</h2></a>
+        <div id="reply-zone">
+            <a href="#" id="reply-button"><h2>Откликнуться</h2></a>
+            <form method="POST" style="display: none" enctype="multipart/form-data" id="reply-form">
+                {% csrf_token %}
+                <div>
+                    {{ reply_send.as_p }}
+                </div>
+                <a href="#" id="cancel-reply-button">Отменить</a>
+                <input type="submit" value="Отправить">
+            </form>
+            {% if error_message %}
+                <p>{{ error_message }}</p>
+            {% endif %}
+        </div>
     </div>
 
-
+<script src="{% static 'js/slider.js' %}"></script>
+<script src="{% static 'js/reply_field.js' %}"></script>
 
 {% endblock %}

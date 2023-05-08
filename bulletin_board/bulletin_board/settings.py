@@ -39,13 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bulletin',
+    # 'bulletin',
     'easy_thumbnails',
+    'bulletin.apps.BulletinConfig',
     'django.contrib.sites',  # Надо также для all-auth
     # ! all-auth apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'rest_framework', # Django Rest Framework
     'django_cleanup.apps.CleanupConfig',  # Очистка ненужных файлов полей FileField, ImageField
 ]
 
@@ -171,8 +173,8 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
-LOGIN_REDIRECT_URL = '/all'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/all'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 # email settings
 

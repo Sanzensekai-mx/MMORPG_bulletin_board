@@ -41,14 +41,14 @@ def main_image_post_dir_path(instance, filename):
 #     return thumbnail
 
 
-class Image(models.Model):
+class Media(models.Model):
     post_rel = models.ForeignKey('Post', on_delete=models.CASCADE)
-    upload_image = models.ImageField(upload_to=post_dir_path, blank=True)
+    upload_file = models.FileField(upload_to=post_dir_path, blank=True)
 
     # is_main_images = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.upload_image.name} | ID: {self.post_rel.id} | {self.post_rel.title}'
+        return f'{self.upload_file.name} | ID: {self.post_rel.id} | {self.post_rel.title}'
 
     # def save(self, **kwargs):
     #     if len(Image.objects.filter(post_rel=self.post_rel, is_main_images=True)) > 1:
@@ -71,42 +71,28 @@ class Post(models.Model):
     create_datetime = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     main_image = models.ImageField(upload_to=main_image_post_dir_path, blank=True)  # фиксированный размер должен быть
-    load_files = models.ManyToManyField(to=Image, blank=True)  # все изображения, загружаемые пользователем
+    load_files = models.ManyToManyField(to=Media, blank=True)  # все изображения, загружаемые пользователем
 
-    def save(self, *args, **kwargs):
-        print(self.main_image.name)
-        # print(self.request.FILES)
-        print(args)
-        print(kwargs)
-    #     # is_main_image = True if 'main' == self.main_image.name.split()[0] else False
-    #     if self.main_image:
-    #         self.main_image = make_thumbnail(self.main_image)
-        # if not self.make_main_img_thumbnail():
-        #     pass
-        # print(1)
-        # print(self.main_image)
-        super().save(*args, **kwargs)
-        # file = self.main_image.name.split('.')
-        # image = PILImage.open(self.main_image.name, mode='r')
-        # image.thumbnail((204, 204), PILImage.ANTIALIAS)
-        # image.save(file + ".thumbnail", "JPEG")
+    # def save(self, *args, **kwargs):
+    #     print(args)
+    #     print(kwargs)
+    #     super().save(*args, **kwargs)
 
-    #     image = Image.open(self.main_image)
+    def get_absolute_url(self):
+        return f'/bulletin/{self.id}'
 
     def __str__(self):
         return f'{self.title} | {self.create_datetime} | {self.author.username} | {self.category}'
-
-    # def path_to_main_image(self):
-    #     return self.load_files.all().filter(is_main_images=True)[0].file
 
 
 class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
-    create_datatime = models.DateTimeField(auto_now_add=True)
-    is_accept = models.BooleanField(default=False)
-    is_rejected = models.BooleanField(default=False)
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    is_accept = models.BooleanField(default=False, blank=True)
+    is_rejected = models.BooleanField(default=False, blank=True)
+    viewed = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
-        return f'{self.user.username} | {self.post.title} | {self.create_datatime}'
+        return f'{self.user.username} | {self.post.title} | {self.create_datetime}'

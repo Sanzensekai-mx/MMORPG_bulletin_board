@@ -78,9 +78,11 @@ h4 {
     background-color: rgba(60, 42, 41, 0.8) !important;
 }
 
-.container {
+
+.bulletin-card-wrapper {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .logo-goblin {
@@ -116,4 +118,13 @@ h4 {
 
 .image_card {
     width: none !important;
+}
+
+.media-file {
+    width: 204px;
+    height: auto;
+}
+
+#reply-button {
+    text-align: center;
 }

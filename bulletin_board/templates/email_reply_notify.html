@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>На ваше объявление "{{ post.title }}" пришел отклик!</p>
+    <hr>
+    <p>от: {{ reply.user.username }}</p>
+    <p>{{ reply.text }}</p>
+    <p>Вы можете его принять или отклонить</p>
+    <p><a href="{{ url_to_post_detail }}">Перейти в ваше объявление</a></p>
+    <p><a href="#">Принять/Отклонить отклик</a></p>
+
+</body>
+</html>
