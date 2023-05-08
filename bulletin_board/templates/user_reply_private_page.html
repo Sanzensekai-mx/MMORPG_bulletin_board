@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Отклики
+{% endblock %}
+
+{% block content %}
+
+<!--{{ current_post }}-->
+{% for reply in queryset %}
+    <div class="card mb-4">
+        <span>{{ reply.create_datetime }}</span>
+        <p>от: {{ reply.user }}</p>
+        <p>{{ reply.text }}</p>
+    </div>
+{% endfor %}
+<!--{{ queryset }}-->
+
+
+{% endblock %}

@@ -78,7 +78,8 @@ h4 {
     background-color: rgba(60, 42, 41, 0.8) !important;
 }
 
-.container {
+
+.bulletin-card-wrapper {
     display: flex;
     align-items: center;
     flex-wrap: wrap;

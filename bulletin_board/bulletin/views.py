@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, redirect
 
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -148,3 +148,25 @@ class DeletePost(DeleteView):
     template_name = 'bulletin_delete.html'
     context_object_name = 'post_to_del'
     success_url = '/'
+
+
+class UserSelfPostsReplies(ListView):
+    model = Reply
+    template_name = 'user_reply_private_page.html'
+
+    def get_queryset(self):
+        queryset = Reply.objects.filter(post__author=self.request.user).order_by('-create_datetime')
+        if self.request.GET.get('post_id'):
+            post_id = self.request.GET.get('post_id')
+            queryset = Reply.objects.filter(post__pk=post_id).order_by('-create_datetime')
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['queryset'] = self.get_queryset()
+        if self.request.GET.get('post_id'):
+            post_id = self.request.GET.get('post_id')
+            context['current_post'] = Post.object.get(id=post_id)
+        else:
+            context['current_post'] = None
+        return context
