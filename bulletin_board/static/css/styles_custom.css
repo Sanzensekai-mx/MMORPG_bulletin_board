@@ -140,7 +140,12 @@ h4 {
 .replies-wrapper {
     display: flex;
     flex-direction: column;
+}
+
+.card-text {
     color: #fff;
+    margin-bottom: 5px;
+
 }
 
 .filter-panel {

@@ -15,6 +15,9 @@
             <a class="filter-p-post">{{ post.title }}</a>
             {% endfor %}
         </div>
+        {% if posts_paginator.count < 10 %}
+
+        {% else %}
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
@@ -30,19 +33,23 @@
         <span class="current">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-
+        {% endif %}
 <!--        {{ user_posts }}-->
     </div>
 
 </section>
 <section class="replies-wrapper col-8">
-    {% for reply in queryset %}
-    <div class="card mb-4">
-        <span>{{ reply.create_datetime }}</span>
-        <p>от: {{ reply.user }}</p>
-        <p>{{ reply.text }}</p>
-    </div>
-    {% endfor %}
+    {% if queryset.count > 0 %}
+        {% for reply in queryset %}
+        <div class="card mb-4">
+            <p class="card-text">{{ reply.create_datetime }}</p>
+            <p class="card-text">от: {{ reply.user }}</p>
+            <p class="card-text">{{ reply.text }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h2>Тут ещё нет откликов</h2>
+    {% endif %}
 </section>
 
 <!--{{ queryset }}-->
