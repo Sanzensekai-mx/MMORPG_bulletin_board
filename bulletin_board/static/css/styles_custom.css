@@ -4,6 +4,11 @@ html, body {
     background-size: cover;
 }
 
+.container {
+    display: flex;
+    align-items: center;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
