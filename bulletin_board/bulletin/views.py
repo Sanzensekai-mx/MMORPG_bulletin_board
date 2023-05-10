@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse
 
+from django.core.paginator import Paginator
+
 from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
 
@@ -163,8 +165,13 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+
         context['queryset'] = self.get_queryset()
-        context['user_posts'] = Post.objects.filter(author=self.request.user)
+        user_posts = Post.objects.filter(author=self.request.user)
+        # context['user_posts'] = Post.objects.filter(author=self.request.user)
+        filter_post_pagination = Paginator(user_posts, 10)
+        context['posts_paginator'] = filter_post_pagination
+        context['page_obj'] = filter_post_pagination.page(self.request.GET.get('page', 1))
         if self.request.GET.get('post_id'):
             post_id = self.request.GET.get('post_id')
             context['current_post'] = Post.object.get(id=post_id)
