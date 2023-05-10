@@ -106,7 +106,7 @@ class AddPost(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, {'form': post_form, 'media_form': media_form})
 
 
-class UpdatePost(UpdateView):
+class UpdatePost(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'bulletin_edit_post.html'
     form_class = PostForm
@@ -143,14 +143,14 @@ class UpdatePost(UpdateView):
         return super().post(request, *args, **kwargs)
 
 
-class DeletePost(DeleteView):
+class DeletePost(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'bulletin_delete.html'
     context_object_name = 'post_to_del'
     success_url = '/'
 
 
-class UserSelfPostsReplies(ListView):
+class UserSelfPostsReplies(LoginRequiredMixin, ListView):
     model = Reply
     template_name = 'user_reply_private_page.html'
 
