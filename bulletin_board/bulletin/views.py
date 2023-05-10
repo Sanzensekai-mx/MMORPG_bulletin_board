@@ -164,6 +164,7 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['queryset'] = self.get_queryset()
+        context['user_posts'] = Post.objects.filter(author=self.request.user)
         if self.request.GET.get('post_id'):
             post_id = self.request.GET.get('post_id')
             context['current_post'] = Post.object.get(id=post_id)

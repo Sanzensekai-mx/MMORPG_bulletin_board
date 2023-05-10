@@ -7,13 +7,29 @@
 {% block content %}
 
 <!--{{ current_post }}-->
-{% for reply in queryset %}
+<section class="col-4">
+    <div class="filter-panel card">
+        <p>Мои объявления</p>
+        <div class="filter-data">
+            {% for post in user_posts %}
+            <a class="filter-p-post">{{ post.title }}</a>
+            {% endfor %}
+        </div>
+
+<!--        {{ user_posts }}-->
+    </div>
+
+</section>
+<section class="replies-wrapper col-8">
+    {% for reply in queryset %}
     <div class="card mb-4">
         <span>{{ reply.create_datetime }}</span>
         <p>от: {{ reply.user }}</p>
         <p>{{ reply.text }}</p>
     </div>
-{% endfor %}
+    {% endfor %}
+</section>
+
 <!--{{ queryset }}-->
 
 

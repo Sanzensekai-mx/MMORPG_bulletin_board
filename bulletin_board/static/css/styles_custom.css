@@ -6,7 +6,10 @@ html, body {
 
 .container {
     display: flex;
-    align-items: center;
+}
+
+.align-center-container {
+    align-items: center
 }
 
 .wrapper {
@@ -37,7 +40,7 @@ html, body {
 
 .card {
     border: 0px !important;
-    background-color: rgba(66, 66, 66, 0.5) !important;
+    background-color: rgba(66, 66, 66, 0.7) !important;
     padding-top: 0.5rem;
     margin-right: 5px;
     padding-left: 0.5rem;
@@ -132,4 +135,33 @@ h4 {
 
 #reply-button {
     text-align: center;
+}
+
+.replies-wrapper {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+.filter-panel {
+    min-width: 200px;
+    max-width: 400px;
+    min-height: 400px;
+    color: #fff;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    background-color: rgba(60, 42, 41, 0.8) !important;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    text-align: center
+}
+
+.filter-p-post {
+    margin-bottom: 5px;
+}
+
+.filter-data {
+    display: flex;
+    flex-direction: column;
 }
