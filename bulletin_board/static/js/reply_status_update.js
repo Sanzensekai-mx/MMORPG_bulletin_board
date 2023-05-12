@@ -1,5 +1,6 @@
 acceptButtons = document.getElementsByClassName("accept-reply")
 rejectButtons = document.getElementsByClassName("reject-reply")
+replyCards = document.getElementsByClassName("reply-card")
 
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
@@ -11,6 +12,7 @@ function getCookie(name) {
 
 for (let i = 0; i < acceptButtons.length; i++) {
     acceptButtons[i].addEventListener("click", function() {
+        reply = replyCards[i]
         let xhr = new XMLHttpRequest();
         const pk = this.getAttribute("reply-pk");
         xhr.open("POST", '/api/reply_accept/' + pk + '/', true);
@@ -24,13 +26,12 @@ for (let i = 0; i < acceptButtons.length; i++) {
                 console.log(response);
                 if (response.success) {
                     alert('Отклик принят! Сообщение пользователю отправлено.')
+                    reply.remove()
+                }
+                else {
+                    alert('Что-то пошло не так. Попробуйте попозже.')
                 }
             }
-
-            else {
-                alert('Что-то пошло не так. Попробуйте попозже.')
-            }
-
         };
 
         xhr.send()
@@ -38,6 +39,7 @@ for (let i = 0; i < acceptButtons.length; i++) {
     });
 
     rejectButtons[i].addEventListener("click", function() { 
+        reply = replyCards[i]
         let xhr = new XMLHttpRequest();
         const pk = this.getAttribute("reply-pk");
         xhr.open("POST", '/api/reply_reject/' + pk + '/', true);
@@ -50,6 +52,10 @@ for (let i = 0; i < acceptButtons.length; i++) {
                 let response = JSON.parse(xhr.responseText);
                 if (response.success) {
                     alert('Отклик отклонен!')
+                    reply.remove()
+                }
+                else {
+                    alert('Что-то пошло не так. Попробуйте попозже.')
                 }
             }
         };

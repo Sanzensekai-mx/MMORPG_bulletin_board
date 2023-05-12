@@ -44,7 +44,7 @@
     {% if queryset.count > 0 %}
         {% for reply in queryset %}
             {% if not reply.viewed %}
-                <div class="card mb-4">
+                <div class="card mb-4 reply-card">
                     <div>
                         <p class="card-text">{{ reply.create_datetime }}</p>
                         <p class="card-text">Объявление: {{ reply.post.title }}</p>
@@ -52,8 +52,10 @@
                         <p class="card-text">{{ reply.text }}</p>
                     </div>
                     <div>
-                        <a href="#" class="accept-reply" reply-pk="{{ reply.id }}">Принять</a>
-                        <a href="#" class="reject-reply" reply-pk="{{ reply.id }}">Отклонить</a>
+                        <ul>
+                            <li class="nav-item"><a href="#" class="accept-reply nav-link" reply-pk="{{ reply.id }}">Принять</a></li>
+                            <li class="nav-item"><a href="#" class="reject-reply nav-link" reply-pk="{{ reply.id }}">Отклонить</a></li>
+                        </ul>
                     </div>
                 </div>
             {% endif %}
