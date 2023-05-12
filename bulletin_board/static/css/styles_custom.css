@@ -47,6 +47,11 @@ html, body {
     padding-right: 0.5rem;
 }
 
+.card-main-page {
+    width: 220px;
+    height: 300px;
+}
+
 .new-header {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
@@ -57,10 +62,12 @@ html, body {
 
 .card-body {
     padding: 0px !important;
+
 }
 
 h4 {
     font-size: 1.1rem !important;
+    word-wrap: break-word;
 }
 
 .image-wrapper {

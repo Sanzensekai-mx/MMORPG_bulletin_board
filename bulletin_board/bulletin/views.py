@@ -10,8 +10,12 @@ from django.urls import reverse
 
 from django.core.paginator import Paginator
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
+from .serializers import AcceptReplyStatusSerializer, RejectReplyStatusSerializer
 
 
 # from .serializers import PostSerializer, ImageSerializer
@@ -178,3 +182,27 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
         else:
             context['current_post'] = None
         return context
+
+
+class AcceptReplyStatusAPIView(APIView):
+    def post(self, request, pk):
+        reply = Reply.objects.get(pk=pk)
+        if reply.is_accept is False and reply.is_rejected is False:
+            reply.is_accept = True
+            reply.viewed = True
+            reply.save()
+            return Response({'success': True})
+        else:
+            return Response({'success': False})
+
+
+class RejectReplyStatusAPIView(APIView):
+    def post(self, request, pk):
+        reply = Reply.objects.get(pk=pk)
+        if reply.is_accept is False and reply.is_rejected is False:
+            reply.is_rejected = True
+            reply.viewed = True
+            reply.save()
+            return Response({'success': True})
+        else:
+            return Response({'success': False})

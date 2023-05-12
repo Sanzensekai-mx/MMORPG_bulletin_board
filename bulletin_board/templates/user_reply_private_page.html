@@ -1,5 +1,7 @@
 {% extends 'default.html' %}
 
+{% load static %}
+
 {% block title %}
 Отклики
 {% endblock %}
@@ -41,11 +43,20 @@
 <section class="replies-wrapper col-8">
     {% if queryset.count > 0 %}
         {% for reply in queryset %}
-        <div class="card mb-4">
-            <p class="card-text">{{ reply.create_datetime }}</p>
-            <p class="card-text">от: {{ reply.user }}</p>
-            <p class="card-text">{{ reply.text }}</p>
-        </div>
+            {% if not reply.viewed %}
+                <div class="card mb-4">
+                    <div>
+                        <p class="card-text">{{ reply.create_datetime }}</p>
+                        <p class="card-text">Объявление: {{ reply.post.title }}</p>
+                        <p class="card-text">от: {{ reply.user }}</p>
+                        <p class="card-text">{{ reply.text }}</p>
+                    </div>
+                    <div>
+                        <a href="#" class="accept-reply" reply-pk="{{ reply.id }}">Принять</a>
+                        <a href="#" class="reject-reply" reply-pk="{{ reply.id }}">Отклонить</a>
+                    </div>
+                </div>
+            {% endif %}
         {% endfor %}
     {% else %}
         <h2>Тут ещё нет откликов</h2>
@@ -54,5 +65,7 @@
 
 <!--{{ queryset }}-->
 
+<script src="{% static 'js/reply_status_update.js' %}"></script>
 
 {% endblock %}
+
