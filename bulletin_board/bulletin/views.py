@@ -12,9 +12,6 @@ from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
 
 
-# from .serializers import PostSerializer, ImageSerializer
-
-
 class ListPosts(ListView):
     model = Post
     template_name = 'posts_bulletin.html'
@@ -46,9 +43,13 @@ class DetailPost(DetailView, FormMixin):
         post = self.object
         all_media = post.load_files.all()
         context['reply_send'] = ReplyTextArea()
+        context['images_ext'] = ['jpg', 'jpeg', 'png']
+        context['video_ext'] = ['mp4']
         if all_media:
             context['first_media'] = all_media[0]
+            context['first_media_ext'] = all_media[0].upload_file.name.split('.')[-1]
             context['rest_of_media'] = all_media[1:]
+            context['rest_of_media_ext'] = [i.upload_file.name.split('.')[-1] for i in all_media[1:]]
 
         return context
 

@@ -1,6 +1,7 @@
 {% extends 'default.html' %}
 
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
     Объявление
@@ -11,10 +12,21 @@
         <h2>{{ bulletin_new.title }}</h2>
         <p>{{ bulletin_new.create_datetime }}</p>
         <div class="image-wrapper">
-<!--            {{ first_media.upload_file.name }}-->
-            <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="..." />
+            {% if first_media|get_media_ext:images_ext %}
+                <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="{{ media.upload_file }}" />
+            {% else %}
+                <video class="media" style="display: none;" controls="controls">
+                    <source src="{{ MEDIA_URL }}{{ first_media.upload_file }}">
+                </video>
+            {% endif %}
             {% for media in rest_of_media %}
-                <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="..." />
+                {% if first_media|get_media_ext:images_ext %}
+                    <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="{{ media }}" />
+                {% else %}
+                    <video class="media" style="display: none;" controls="controls">
+                        <source src="{{ MEDIA_URL }}{{ media.upload_file }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                    </video>
+                {% endif %}
             {% endfor %}
         </div>
         <section class="slider-main">
