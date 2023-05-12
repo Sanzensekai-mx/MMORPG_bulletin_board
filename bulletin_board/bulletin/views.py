@@ -18,6 +18,7 @@ from .forms import PostForm, MediaForm, ReplyTextArea
 
 from .signals import update_reply_signal
 
+
 class ListPosts(ListView):
     model = Post
     template_name = 'posts_bulletin.html'
@@ -179,7 +180,7 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
         context['page_obj'] = filter_post_pagination.page(self.request.GET.get('page', 1))
         if self.request.GET.get('post_id'):
             post_id = self.request.GET.get('post_id')
-            context['current_post'] = Post.object.get(id=post_id)
+            context['current_post'] = Post.objects.get(id=post_id)
         else:
             context['current_post'] = None
         return context
