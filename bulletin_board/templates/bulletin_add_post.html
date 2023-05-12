@@ -5,18 +5,25 @@
 {% endblock %}
 
 {% block content %}
-<h2>Добавить новое объявление</h2>
-<hr>
+
+<div>
+
+    <h2>Добавить новое объявление</h2>
+    <hr>
 
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-<!--    {{ form.as_p }}-->
-    <div id="media-formset">
-        {{ form.as_p }}
-        {{ media_form }}
-    </div>
-    <input type="submit" value="Добавить">
-</form>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    <!--    {{ form.as_p }}-->
+        <div id="media-formset">
+            {{ form.as_p }}
+            {{ media_form }}
+        </div>
+        <input type="submit" value="Добавить">
+    </form>
+
+</div>
+
+
 
 {% endblock %}

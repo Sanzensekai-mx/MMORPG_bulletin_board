@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import ListPosts, DetailPost, AddPost, UpdatePost, DeletePost, UserSelfPostsReplies
+from .views import ListPosts, DetailPost, AddPost, UpdatePost, DeletePost, UserSelfPostsReplies, \
+    AcceptReplyStatusAPIView, RejectReplyStatusAPIView
 
 urlpatterns = [
     path('', ListPosts.as_view(), name='all'),
@@ -7,6 +8,7 @@ urlpatterns = [
     path('bulletin/add', AddPost.as_view(), name='add_post'),
     path('bulletin/<int:pk>/edit', UpdatePost.as_view(), name='update_post'),
     path('bulletin/<int:pk>/delete', DeletePost.as_view(), name='delete_post'),
-    path('bulletin/self_posts_replies', UserSelfPostsReplies.as_view(), name='user_post_replies')
-    # path('upload/', PostUploadView.as_view(), name='post_upload')
+    path('bulletin/self_posts_replies', UserSelfPostsReplies.as_view(), name='user_post_replies'),
+    path('api/reply_accept/<int:pk>/', AcceptReplyStatusAPIView.as_view(), name='accept_reply'),
+    path('api/reply_reject/<int:pk>/', RejectReplyStatusAPIView.as_view(), name='reject_reply'),
 ]

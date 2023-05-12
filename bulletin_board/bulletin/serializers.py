@@ -1,16 +1,14 @@
 from rest_framework import serializers
-from .models import Post, Media
+from .models import Post, Media, Reply
 
 
-class ImageSerializer(serializers.ModelSerializer):
+class AcceptReplyStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Media
-        fields = ('id', 'image')
+        model = Reply
+        fields = ('id', 'is_accept')
 
 
-class PostSerializer(serializers.ModelSerializer):
-    upload_files = ImageSerializer(many=True)
-
+class RejectReplyStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
-        fields = ('id', 'title', 'content', 'category', 'upload_files')
+        model = Reply
+        fields = ('id', 'is_rejected')
