@@ -16,9 +16,7 @@ from rest_framework.response import Response
 from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
 from .serializers import AcceptReplyStatusSerializer, RejectReplyStatusSerializer
-
-
-# from .serializers import PostSerializer, ImageSerializer
+from .signals import update_reply_signal
 
 
 class ListPosts(ListView):
@@ -191,6 +189,8 @@ class AcceptReplyStatusAPIView(APIView):
             reply.is_accept = True
             reply.viewed = True
             reply.save()
+            print(request.data)
+            update_reply_signal.send(sender=Reply, instance=reply, is_accept=True)
             return Response({'success': True})
         else:
             return Response({'success': False})
@@ -203,6 +203,8 @@ class RejectReplyStatusAPIView(APIView):
             reply.is_rejected = True
             reply.viewed = True
             reply.save()
+            print(request.data)
+            update_reply_signal.send(sender=Reply, instance=reply, is_accept=False)
             return Response({'success': True})
         else:
             return Response({'success': False})
