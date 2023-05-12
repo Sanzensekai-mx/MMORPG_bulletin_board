@@ -176,7 +176,8 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
         context['page_obj'] = filter_post_pagination.page(self.request.GET.get('page', 1))
         if self.request.GET.get('post_id'):
             post_id = self.request.GET.get('post_id')
-            context['current_post'] = Post.object.get(id=post_id)
+            print(Post.objects.get(pk=post_id))
+            context['current_post'] = Post.objects.get(pk=post_id)
         else:
             context['current_post'] = None
         return context

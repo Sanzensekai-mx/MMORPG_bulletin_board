@@ -11,10 +11,10 @@
 <!--{{ current_post }}-->
 <section class="col-4">
     <div class="filter-panel card">
-        <p>Мои объявления</p>
+        <p><a href="{% url 'user_post_replies' %}">Все объявления</a></p>
         <div class="filter-data">
             {% for post in page_obj %}
-            <a class="filter-p-post">{{ post.title }}</a>
+                <a href="{% url 'user_post_replies' %}?post_id={{ post.id }}" class="filter-p-post">{{ post.title }}</a>
             {% endfor %}
         </div>
         {% if posts_paginator.count < 10 %}
@@ -41,6 +41,14 @@
 
 </section>
 <section class="replies-wrapper col-8">
+    <div class="card mb-4">
+        {% if current_post %}
+            <p class="card-text">Отклики по объявлению "{{ current_post.title }}"</p>
+        {% else %}
+            <p class="card-text">Отклики по всем объявлениям</p>
+        {% endif %}
+
+    </div>
     {% if queryset.count > 0 %}
         {% for reply in queryset %}
             {% if not reply.viewed %}
@@ -58,6 +66,18 @@
                         </ul>
                     </div>
                 </div>
+            {% else %}
+            <div class="card mb-4 reply-card">
+                <div>
+                    <p class="card-text">{{ reply.create_datetime }}</p>
+                    <p class="card-text">Объявление: {{ reply.post.title }}</p>
+                    <p class="card-text">от: {{ reply.user }}</p>
+                    <p class="card-text">{{ reply.text }}</p>
+                </div>
+                <div>
+                    <p>Отклик принят ✔</p>
+                </div>
+            </div>
             {% endif %}
         {% endfor %}
     {% else %}

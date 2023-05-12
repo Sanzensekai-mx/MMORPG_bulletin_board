@@ -25,8 +25,8 @@ for (let i = 0; i < acceptButtons.length; i++) {
                 let response = JSON.parse(xhr.responseText);
                 console.log(response);
                 if (response.success) {
-                    alert('Отклик принят! Сообщение пользователю отправлено.')
-                    reply.remove()
+                    alert('Отклик принят! Сообщение пользователю отправлено.') 
+                    reply.children[1].innerHTML = "<p>Отклик принят ✔</p>"
                 }
                 else {
                     alert('Что-то пошло не так. Попробуйте попозже.')
