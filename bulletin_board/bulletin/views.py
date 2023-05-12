@@ -8,9 +8,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse
 
+from django.core.paginator import Paginator
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from .models import Post, Media, Reply
 from .forms import PostForm, MediaForm, ReplyTextArea
 
+from .signals import update_reply_signal
 
 class ListPosts(ListView):
     model = Post
@@ -164,10 +170,44 @@ class UserSelfPostsReplies(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+
         context['queryset'] = self.get_queryset()
+        user_posts = Post.objects.filter(author=self.request.user)
+        # context['user_posts'] = Post.objects.filter(author=self.request.user)
+        filter_post_pagination = Paginator(user_posts, 10)
+        context['posts_paginator'] = filter_post_pagination
+        context['page_obj'] = filter_post_pagination.page(self.request.GET.get('page', 1))
         if self.request.GET.get('post_id'):
             post_id = self.request.GET.get('post_id')
             context['current_post'] = Post.object.get(id=post_id)
         else:
             context['current_post'] = None
         return context
+
+
+class AcceptReplyStatusAPIView(APIView):
+    def post(self, request, pk):
+        reply = Reply.objects.get(pk=pk)
+        if reply.is_accept is False and reply.is_rejected is False:
+            reply.is_accept = True
+            reply.viewed = True
+            reply.save()
+            print(request.data)
+            update_reply_signal.send(sender=Reply, instance=reply, is_accept=True)
+            return Response({'success': True})
+        else:
+            return Response({'success': False})
+
+
+class RejectReplyStatusAPIView(APIView):
+    def post(self, request, pk):
+        reply = Reply.objects.get(pk=pk)
+        if reply.is_accept is False and reply.is_rejected is False:
+            reply.is_rejected = True
+            reply.viewed = True
+            reply.save()
+            print(request.data)
+            update_reply_signal.send(sender=Reply, instance=reply, is_accept=False)
+            return Response({'success': True})
+        else:
+            return Response({'success': False})

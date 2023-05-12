@@ -1,5 +1,7 @@
 {% extends 'default.html' %}
 
+{% load static %}
+
 {% block title %}
 Отклики
 {% endblock %}
@@ -7,14 +9,85 @@
 {% block content %}
 
 <!--{{ current_post }}-->
-{% for reply in queryset %}
-    <div class="card mb-4">
-        <span>{{ reply.create_datetime }}</span>
-        <p>от: {{ reply.user }}</p>
-        <p>{{ reply.text }}</p>
+<section class="col-4">
+    <div class="filter-panel card">
+        <p><a href="{% url 'user_post_replies' %}">Все объявления</a></p>
+        <div class="filter-data">
+            {% for post in page_obj %}
+                <a href="{% url 'user_post_replies' %}?post_id={{ post.id }}" class="filter-p-post">{{ post.title }}</a>
+            {% endfor %}
+        </div>
+        {% if posts_paginator.count < 10 %}
+
+        {% else %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}"><</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">></a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% endif %}
+<!--        {{ user_posts }}-->
     </div>
-{% endfor %}
+
+</section>
+<section class="replies-wrapper col-8">
+    <div class="card mb-4">
+        {% if current_post %}
+            <p class="card-text">Отклики по объявлению "{{ current_post.title }}"</p>
+        {% else %}
+            <p class="card-text">Отклики по всем объявлениям</p>
+        {% endif %}
+
+    </div>
+    {% if queryset.count > 0 %}
+        {% for reply in queryset %}
+            {% if not reply.viewed %}
+                <div class="card mb-4 reply-card">
+                    <div>
+                        <p class="card-text">{{ reply.create_datetime }}</p>
+                        <p class="card-text">Объявление: {{ reply.post.title }}</p>
+                        <p class="card-text">от: {{ reply.user }}</p>
+                        <p class="card-text">{{ reply.text }}</p>
+                    </div>
+                    <div>
+                        <ul>
+                            <li class="nav-item"><a href="#" class="accept-reply nav-link" reply-pk="{{ reply.id }}">Принять</a></li>
+                            <li class="nav-item"><a href="#" class="reject-reply nav-link" reply-pk="{{ reply.id }}">Отклонить</a></li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+            <div class="card mb-4 reply-card">
+                <div>
+                    <p class="card-text">{{ reply.create_datetime }}</p>
+                    <p class="card-text">Объявление: {{ reply.post.title }}</p>
+                    <p class="card-text">от: {{ reply.user }}</p>
+                    <p class="card-text">{{ reply.text }}</p>
+                </div>
+                <div>
+                    <p>Отклик принят ✔</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h2>Тут ещё нет откликов</h2>
+    {% endif %}
+</section>
+
 <!--{{ queryset }}-->
 
+<script src="{% static 'js/reply_status_update.js' %}"></script>
 
 {% endblock %}
+
