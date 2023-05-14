@@ -143,6 +143,8 @@ class UpdatePost(LoginRequiredMixin, UpdateView):
         if deleted_images:
             deleted_images = json.loads(deleted_images)
 
+            post_media = list(post_media)  # !!! обязательно в преобразовать qs в список
+
             for media_idx in deleted_images:
                 media = post_media[media_idx]
                 media.delete()
