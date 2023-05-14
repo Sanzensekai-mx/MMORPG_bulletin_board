@@ -50,18 +50,6 @@ class Media(models.Model):
     def __str__(self):
         return f'{self.upload_file.name} | ID: {self.post_rel.id} | {self.post_rel.title}'
 
-    # def save(self, **kwargs):
-    #     if len(Image.objects.filter(post_rel=self.post_rel, is_main_images=True)) > 1:
-    #         raise MoreThanOneMainImage
-    #     super().save(self, kwargs)
-    #
-    #     SIZE = 236, 177
-    #     # print(self.instance.file)
-    #     print(self.file)
-    #     # сохранение изображение нужного размера для карточки
-    # if self.is_main_images:
-    #     print(self.instance.file)
-
 
 # Create your models here.
 class Post(models.Model):

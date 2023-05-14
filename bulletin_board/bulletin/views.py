@@ -134,26 +134,38 @@ class UpdatePost(LoginRequiredMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        # post_form = self.get_form()
+        # post_form.instance.author = request.user
         post = Post.objects.get(pk=self.kwargs.get('pk'))
         post_media = post.load_files.all()
         deleted_images = request.POST.get('deleted_images', '[]')
         files = request.FILES.getlist('upload_files')
         media_form = MediaForm(request.POST, request.FILES)
 
+        post_media = list(post_media)  # !!! обязательно в преобразовать qs в список
+
+        print(len(post_media))
+
         if deleted_images:
-            deleted_images = json.loads(deleted_images)
-
-            post_media = list(post_media)  # !!! обязательно в преобразовать qs в список
-
-            for media_idx in deleted_images:
-                media = post_media[media_idx]
-                media.delete()
+            # post_media = list(post_media)  # !!! обязательно в преобразовать qs в список
+            if post_media:
+                deleted_images = json.loads(deleted_images)
+                for media_idx in deleted_images:
+                    post_media[media_idx] = None
+                post_media = [i for i in post_media if i]
 
         if media_form.is_valid():
+            # if files:
             for media in files:
                 new_media = Media.objects.create(post_rel=post, upload_file=media)
                 new_media.save()
-                post.load_files.add(new_media)
+                post_media.append(new_media)
+
+            post.main_image = post_media[0]
+            print(post.main_image)
+            print(post_media[0])
+            post.load_files.clear()
+            post.load_files.set(post_media)
             return super().post(request, *args, **kwargs)
         else:
             context_data = self.get_context_data()
@@ -161,13 +173,15 @@ class UpdatePost(LoginRequiredMixin, UpdateView):
             return render(request, self.template_name,
                           context=context_data)
 
-    def form_valid(self, form, *args, **kwargs):
+    def form_valid(self, form):
         post = form.instance
-        all_files = post.load_files.all()
-        if len(all_files) > 0:
-            post.main_image = all_files[0].upload_file
+        files = list(post.load_files.all())
+        if len(files) > 0:
+            post.main_image = files[0].upload_file
+        else:
+            post.main_image = None
 
-        return super().form_valid(form, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class DeletePost(LoginRequiredMixin, DeleteView):
