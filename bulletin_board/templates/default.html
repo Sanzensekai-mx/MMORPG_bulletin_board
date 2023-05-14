@@ -26,7 +26,9 @@
                         {% if request.user.is_authenticated %}
                             <li class="nav-item"><a class="nav-link" href="#">Привет, {{ request.user.username }}</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выход</a></li>
-
+                            {% if request.user.is_staff %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'admin_send_mail' %}">Рассылка</a></li>
+                            {% endif %}
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Вход и регистрация</a></li>
                         {% endif %}

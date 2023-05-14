@@ -10,6 +10,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'category']
+        widgets = {
+            'content': forms.Textarea(attrs={'wrap': 'hard', 'cols': '60'})
+        }
 
 
 # MediaFormset = inlineformset_factory(Post, Media, extra=1)
@@ -32,3 +35,8 @@ class ReplyTextArea(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['text', ]
+
+
+class SendNewsMails(forms.Form):
+    subject = forms.CharField(max_length=100)
+    content = forms.CharField(widget=forms.Textarea)

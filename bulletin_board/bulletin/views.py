@@ -10,11 +10,14 @@ from django.urls import reverse
 
 from django.core.paginator import Paginator
 
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import EmailMultiAlternatives
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Post, Media, Reply
-from .forms import PostForm, MediaForm, ReplyTextArea
+from .forms import PostForm, MediaForm, ReplyTextArea, SendNewsMails
 
 from .signals import update_reply_signal
 
@@ -162,8 +165,6 @@ class UpdatePost(LoginRequiredMixin, UpdateView):
                 post_media.append(new_media)
 
             post.main_image = post_media[0]
-            print(post.main_image)
-            print(post_media[0])
             post.load_files.clear()
             post.load_files.set(post_media)
             return super().post(request, *args, **kwargs)
@@ -245,3 +246,26 @@ class RejectReplyStatusAPIView(APIView):
             return Response({'success': True})
         else:
             return Response({'success': False})
+
+
+@staff_member_required
+def admin_send_news_mail_view(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        content = request.POST.get('content')
+
+        users = User.objects.all()
+
+        for user in users:
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=content,
+                to=[user.email]
+            )
+
+            msg.send()
+
+        return render(request, 'success_notify.html')
+
+    admin_form = SendNewsMails()
+    return render(request, 'admin_news_notify.html', context={'admin_form': admin_form})
