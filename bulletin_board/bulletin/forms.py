@@ -23,7 +23,8 @@ class PostForm(forms.ModelForm):
 class MediaForm(forms.Form):
     upload_files = forms.FileField(
         widget=forms.ClearableFileInput(attrs={'multiple': True}),
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'mp4'])]
+        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'mp4'])],
+        required=False
     )
 
 

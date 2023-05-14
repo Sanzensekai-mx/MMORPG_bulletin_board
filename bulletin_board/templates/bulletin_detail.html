@@ -12,7 +12,7 @@
         <h2>{{ bulletin_new.title }}</h2>
         <p>{{ bulletin_new.create_datetime }}</p>
         <div class="image-wrapper">
-            {% if first_media %}
+            {% if bulletin_new.load_files.all %}
                 {% if first_media|get_media_ext:images_ext %}
                     <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="{{ media.upload_file }}" />
                 {% else %}
@@ -30,7 +30,7 @@
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <img class="media" src="{{ bulletin_new.main_image }}" alt="{{ media.upload_file }}" />
+                <img class="media" src="{% static 'assets/blank_photo.avif' %}" alt="Изображения нет" />
             {% endif %}
         </div>
         <section class="slider-main">

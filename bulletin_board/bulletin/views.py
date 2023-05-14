@@ -107,8 +107,8 @@ class AddPost(LoginRequiredMixin, CreateView):
                 media_file.upload_file = media
                 media_file.save()
                 post.load_files.add(media_file)
-
-            post.main_image = files[0]
+            if len(files) > 0:
+                post.main_image = files[0]
             return self.form_valid(post_form)
         else:
             return render(request, self.template_name, {'form': post_form, 'media_form': media_form})
@@ -162,7 +162,8 @@ class UpdatePost(LoginRequiredMixin, UpdateView):
     def form_valid(self, form, *args, **kwargs):
         post = form.instance
         all_files = post.load_files.all()
-        post.main_image = all_files[0].upload_file
+        if len(all_files) > 0:
+            post.main_image = all_files[0].upload_file
 
         return super().form_valid(form, *args, **kwargs)
 

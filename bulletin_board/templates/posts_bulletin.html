@@ -15,7 +15,11 @@
                 <div class="card-img-wrapper">
                     <a href="{% url 'bulletin_detail' post.id %}">
 <!--                    <img class="image_card card-img-top" src="{{ MEDIA_URL }}{{ post.main_image }}" alt="..." />-->
-                        <img class="image_card card-img-top" src="{% thumbnail post.main_image 'default' %}" alt="..." />
+                        {% if post.load_files.all %}
+                            <img class="image_card card-img-top" src="{% thumbnail post.main_image 'default' %}" alt="..." />
+                        {% else %}
+                            <img class="image_card card-img-top" src="{% static 'assets/blank_photo.avif' %}" alt="Изображения нет" >
+                        {% endif %}
                     </a>
                 </div>
                 <div class="card-body">
