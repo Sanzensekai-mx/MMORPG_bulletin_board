@@ -12,22 +12,26 @@
         <h2>{{ bulletin_new.title }}</h2>
         <p>{{ bulletin_new.create_datetime }}</p>
         <div class="image-wrapper">
-            {% if first_media|get_media_ext:images_ext %}
-                <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="{{ media.upload_file }}" />
-            {% else %}
-                <video class="media" style="display: none;" controls="controls">
-                    <source src="{{ MEDIA_URL }}{{ first_media.upload_file }}">
-                </video>
-            {% endif %}
-            {% for media in rest_of_media %}
+            {% if first_media %}
                 {% if first_media|get_media_ext:images_ext %}
-                    <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="{{ media }}" />
+                    <img class="media" src="{{ MEDIA_URL }}{{ first_media.upload_file }}" alt="{{ media.upload_file }}" />
                 {% else %}
                     <video class="media" style="display: none;" controls="controls">
-                        <source src="{{ MEDIA_URL }}{{ media.upload_file }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                        <source src="{{ MEDIA_URL }}{{ first_media.upload_file }}">
                     </video>
                 {% endif %}
-            {% endfor %}
+                {% for media in rest_of_media %}
+                    {% if first_media|get_media_ext:images_ext %}
+                        <img class="media" style="display: none;" src="{{ MEDIA_URL }}{{ media.upload_file }}" alt="{{ media }}" />
+                    {% else %}
+                        <video class="media" style="display: none;" controls="controls">
+                            <source src="{{ MEDIA_URL }}{{ media.upload_file }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                        </video>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <img class="media" src="{{ bulletin_new.main_image }}" alt="{{ media.upload_file }}" />
+            {% endif %}
         </div>
         <section class="slider-main">
             <div class="slider-btn slider-btn-back"><a href="#" id="stepBack">&lt;</a></div>
@@ -37,11 +41,6 @@
                 <div class="image-wrapper"></div>
                 <div class="slider-btn slider-btn-forward"><a href="#" id="stepForward">&gt;</a></div>
         </section>
-<!--        <section class="dop-slider-btns">-->
-<!--                <div class="dop-slider-btn slider-btn-back dop-slider-btn"><a href="#" id="stepBackDop">&lt;</a></div>-->
-<!--                <div class="dop-slider-btn slider-btn-forward dop-slider-btn"><a href="#" id="stepForwardDop">&gt;</a></div>-->
-<!--        </section>-->
-<!--        <section class="slider-preview"></section>-->
         <div class="sub-content">
             <p>Категория: {{ bulletin_new.category }}</p>
             <p>{{ bulletin_new.content }}</p>
@@ -49,17 +48,22 @@
     </div>
     <div class="col-4">
         <div id="reply-zone">
-            <a href="#" id="reply-button"><h2>Откликнуться</h2></a>
-            <form method="POST" style="display: none" enctype="multipart/form-data" id="reply-form">
-                {% csrf_token %}
-                <div>
-                    {{ reply_send.as_p }}
-                </div>
-                <a href="#" id="cancel-reply-button">Отменить</a>
-                <input type="submit" value="Отправить">
-            </form>
-            {% if error_message %}
-                <p>{{ error_message }}</p>
+            {% if request.user == bulletin_new.author %}
+                <a href="{% url 'update_post' bulletin_new.id %}">Редактировать объявление</a>
+                <a href="{% url 'delete_post' bulletin_new.id %}">Удалить объвление</a>
+            {% else %}
+                <a href="#" id="reply-button"><h2>Откликнуться</h2></a>
+                <form method="POST" style="display: none" enctype="multipart/form-data" id="reply-form">
+                    {% csrf_token %}
+                    <div>
+                        {{ reply_send.as_p }}
+                    </div>
+                    <a href="#" id="cancel-reply-button">Отменить</a>
+                    <input type="submit" value="Отправить">
+                </form>
+                {% if error_message %}
+                    <p>{{ error_message }}</p>
+                {% endif %}
             {% endif %}
         </div>
     </div>

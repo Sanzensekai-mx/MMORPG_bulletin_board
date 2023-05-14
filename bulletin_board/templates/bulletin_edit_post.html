@@ -21,8 +21,8 @@
         {% endfor %}
     </div>
     <input type="hidden" name="deleted_images" id="deleted-images-input">
-    <a href="#" id="add-image">Добавить изображение</a>
-    <div id="image-fields"></div>
+    {{ media_form }}
+    
     <input type="submit" value="Сохранить изменения">
 </form>
 {% endblock %}
